@@ -61,4 +61,9 @@ public class Player implements Comparable<Player>, Serializable {
     result = 31 * result + (previousExperience ? 1 : 0);
     return result;
   }
+
+  @Override
+  public String toString() {
+    return firstName + " " + lastName;
+  }
 }

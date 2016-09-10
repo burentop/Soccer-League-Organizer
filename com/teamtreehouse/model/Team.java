@@ -3,6 +3,7 @@ package com.teamtreehouse.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.teamtreehouse.model.Player;
 import com.teamtreehouse.model.Players;
 
 public class Team {
@@ -15,6 +16,19 @@ public class Team {
         mCoach = coach;
         mTeamName = teamName;
         mRoster = new ArrayList<>();
+    }
+
+    public String getTeamName() {
+        return mTeamName;
+    }
+
+    public void addPlayer(Player player) {
+        mRoster.add(player);
+    }
+
+    @Override
+    public String toString() {
+        return mTeamName + " - coached by, " + mCoach;
     }
 
 }
