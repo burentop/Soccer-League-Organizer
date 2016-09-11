@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,25 +15,26 @@ public class Admin {
 
     private List<Team> mTeamList;
     private Map<String, String> mMenu;
-    private Player[] mPlayerMasterList;
+    private List<Player> mAvailPlayers;
     private List<Player> mUsedPlayers;
     private BufferedReader mReader;
 
     public Admin() {
-        mPlayerMasterList = Players.load();
+        mAvailPlayers = new ArrayList<>(Arrays.asList(Players.load()));
         mUsedPlayers = new ArrayList<>();
         mTeamList = new ArrayList<>();
         mReader = new BufferedReader(new InputStreamReader (System.in));
         mMenu = new HashMap<>();
         mMenu.put("new", "Create a new team");
         mMenu.put("add", "Add player to existing team");
+        mMenu.put("remove", "Remove player from existing team");
         mMenu.put("quit", "Exit program");
     }
 
     public String promptInput() throws IOException {
         System.out.printf("There are %d existing teams," +
             " and %d available players.\n", mTeamList.size(), 
-            mPlayerMasterList.length - mUsedPlayers.size());
+            mAvailPlayers.size());
         System.out.println("Your options are:\n");
         for (Map.Entry<String, String> option : mMenu.entrySet()) {
             System.out.printf("%s - %s\n", option.getKey(), option.getValue());
@@ -53,10 +55,11 @@ public class Admin {
                         break;
                     case "add":
                         if (mTeamList.size() > 0) {
-                            Team team = chooseTeam();
-                            Player player = mPlayerMasterList[promptForPlayers()];
+                            Team team = chooseTeam(mTeamList);
+                            Player player = choosePlayer(mAvailPlayers);
                             team.addPlayer(player);
                             mUsedPlayers.add(player);
+                            mAvailPlayers.remove(player);
                             System.out.printf("%s %s was added to Team %s\n",
                                     player.getFirstName(),
                                     player.getLastName(), 
@@ -67,6 +70,17 @@ public class Admin {
                             System.out.println("No teams have been created.");
                             break;
                         }
+                    case "remove":
+                        Team team = chooseTeam(mTeamList);
+                        System.out.println("Which player to remove: ");
+                        Player player = choosePlayer(team.getPlayers());
+                        team.removePlayer(player);
+                        mUsedPlayers.remove(player);
+                        mAvailPlayers.add(player);
+                        System.out.printf("%s %s was removed from Team %s\n",
+                                    player.getFirstName(),
+                                    player.getLastName(),
+                                    team.getTeamName());
                     case "quit":
                         System.out.println("Goodbye.");
                         break;
@@ -100,28 +114,23 @@ public class Admin {
         System.out.println();
     }
 
-    private Team chooseTeam() throws IOException {
+    private Team chooseTeam(List list) throws IOException {
         System.out.println();
         System.out.println("Available teams: ");
-        int index = promptForTeam();
-        return mTeamList.get(index);
+        int index = promptForIndex(list);
+        return (Team) list.get(index);
     }
 
-    private int promptForPlayers() throws IOException {
-        for (int i = 0; i < mPlayerMasterList.length; i++) {
-            if (!mUsedPlayers.contains(mPlayerMasterList[i])) {
-                System.out.printf("%s. %s\n", i + 1, mPlayerMasterList[i]);
-            }
-        }
-        System.out.print("Which player would you like to add: ");
-        String optionAsString = mReader.readLine();
-        int choice = Integer.parseInt(optionAsString.trim());
-        return choice - 1;
+    private Player choosePlayer(List list) throws IOException {
+        System.out.println();
+        System.out.println("Available players: ");
+        int index = promptForIndex(list);
+        return (Player) list.get(index);
     }
 
-    private int promptForTeam() throws IOException {
-        for (int i = 0; i < mTeamList.size(); i++) {
-            System.out.printf("%s. %s\n", i + 1, mTeamList.get(i));
+    private int promptForIndex(List list) throws IOException {
+        for (int i = 0; i < list.size(); i++) {
+            System.out.printf("%s. %s\n", i + 1, list.get(i));
         }
         System.out.print("Your choice: ");
         String optionAsString = mReader.readLine();

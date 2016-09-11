@@ -26,9 +26,17 @@ public class Team {
         mRoster.add(player);
     }
 
+    public void removePlayer(Player player) {
+        mRoster.remove(player);
+    }
+
     @Override
     public String toString() {
         return mTeamName + " - coached by, " + mCoach;
+    }
+
+    public List<Player> getPlayers() {
+        return mRoster;
     }
 
 }
