@@ -67,6 +67,7 @@ public class Player implements Comparable<Player>, Serializable {
 
   @Override
   public String toString() {
-    return firstName + " " + lastName;
+    return firstName + " " + lastName + ", Height: " + heightInInches +
+                ", Experienced: " + previousExperience;
   }
 }
