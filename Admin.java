@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,15 +119,35 @@ public class Admin {
     private Team chooseTeam(List list) throws IOException {
         System.out.println();
         System.out.println("Available teams: ");
-        int index = promptForIndex(list);
-        return (Team) list.get(index);
+        List<Team> sortedTeam = list;
+        sortedTeam.sort(new Comparator<Team>() {
+            @Override
+            public int compare(Team team1, Team team2) {
+                if (team1.equals(team2)) {
+                    return 0;
+                }
+                return team1.getTeamName().compareTo(team2.getTeamName());
+            }
+        });
+        int index = promptForIndex(sortedTeam);
+        return (Team) sortedTeam.get(index);
     }
 
     private Player choosePlayer(List list) throws IOException {
         System.out.println();
         System.out.println("Available players: ");
-        int index = promptForIndex(list);
-        return (Player) list.get(index);
+        List<Player> sortedPlayer = list;
+        sortedPlayer.sort(new Comparator<Player>() {
+            @Override
+            public int compare(Player player1, Player player2) {
+                if (player1.equals(player2)) {
+                    return 0;
+                }
+                return player1.compareTo(player2);
+            }
+        });
+        int index = promptForIndex(sortedPlayer);
+        return (Player) sortedPlayer.get(index);
     }
 
     private int promptForIndex(List list) throws IOException {
