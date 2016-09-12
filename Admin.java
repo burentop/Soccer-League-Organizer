@@ -33,6 +33,8 @@ public class Admin {
         mMenu = new HashMap<>();
         mMenu.put("new", "Create a new team");
         mMenu.put("add", "Add player to existing team");
+        mMenu.put("balance", "See league balance report");
+        mMenu.put("print", "Print team roster");
         mMenu.put("remove", "Remove player from existing team");
         mMenu.put("report", "See team roster by height");
         mMenu.put("quit", "Exit program");
@@ -85,6 +87,16 @@ public class Admin {
                             System.out.println("No teams have been created.");
                             break;
                         }
+                    case "balance":
+                        System.out.println("Which team for Balance Report: ");
+                        Team teamForBalance = chooseTeam(mTeamList);
+                        printBalanceReport(teamForBalance.getBalanceReport());
+                        break;
+                    case "print":
+                        System.out.println("Which team for Balance Report: ");
+                        Team teamToPrint = chooseTeam(mTeamList);
+                        printTeam(teamToPrint);
+                        break;
                     case "remove":
                         Team teamToRemove = chooseTeam(mTeamList);
                         System.out.println("Which player to remove: ");
@@ -102,7 +114,7 @@ public class Admin {
                     case "report":
                         System.out.println("Which team for report: ");
                         Team teamForReport = chooseTeam(mTeamList);
-                        printHeightReport(teamForReport.heightReport());
+                        printHeightReport(teamForReport.getHeightReport());
                         break;
                     case "quit":
                         System.out.println("Goodbye.");
@@ -192,6 +204,25 @@ public class Admin {
             for (Player player : players) {
                 System.out.println(player);
             }
+        }
+        System.out.println();
+    }
+
+    private void printBalanceReport(Map<String, Integer> report) {
+        Iterator it = report.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            System.out.println();
+            System.out.println(pair.getKey() + ": " + pair.getValue());
+        }
+    } 
+
+    private void printTeam(Team team) {
+        System.out.println();
+        System.out.println("Team Roster");
+        System.out.println("***********");
+        for (Player player : team.getPlayers()) {
+            System.out.println(player);
         }
         System.out.println();
     }

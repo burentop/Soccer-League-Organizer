@@ -15,12 +15,15 @@ public class Team implements Comparable<Team> {
     private String mCoach;
     private String mTeamName;
     private Set<Player> mRoster;
-    private Map<String, Set<Player>> heightReport;
+    private Map<String, Set<Player>> mHeightReport;
+    private Map<String, Integer> mBalanceReport;
 
     public Team(String coach, String teamName) {
         mCoach = coach;
         mTeamName = teamName;
         mRoster = new TreeSet<>();
+        mBalanceReport = new TreeMap<>();
+        mHeightReport = new TreeMap<>();
     }
 
     public String getTeamName() {
@@ -44,22 +47,41 @@ public class Team implements Comparable<Team> {
         return (Set) mRoster;
     }
 
-    public Map<String, Set<Player>> heightReport() {
-        heightReport = new TreeMap<>();
-        heightReport.put("35-40", new TreeSet<>());
-        heightReport.put("41-46", new TreeSet<>());
-        heightReport.put("47-50", new TreeSet<>());
+    public Map<String, Set<Player>> getHeightReport() {
+        createReports();
+        return mHeightReport;
+    }
+
+    public Map<String, Integer> getBalanceReport() {
+        createReports();
+        return mBalanceReport;
+    }
+
+    public void createReports() {
+        mHeightReport = new TreeMap<>();
+        mBalanceReport = new TreeMap<>();
+        mHeightReport.put("35-40", new TreeSet<>());
+        mHeightReport.put("41-46", new TreeSet<>());
+        mHeightReport.put("47-50", new TreeSet<>());
+        mBalanceReport.put("Experienced", 0);
+        mBalanceReport.put("Inexperienced", 0);
         for (Player player : mRoster) {
             int height = player.getHeightInInches();
             if (height >= 35 && height <= 40) {
-                heightReport.get("35-40").add(player);
+                mHeightReport.get("35-40").add(player);
             } else if (height >= 41 && height <= 46) {
-                heightReport.get("41-46").add(player);
+                mHeightReport.get("41-46").add(player);
             } else {
-                heightReport.get("47-50").add(player);
+                mHeightReport.get("47-50").add(player);
+            }
+            if (player.isPreviousExperience()) {
+                Integer count = mBalanceReport.get("Experienced");
+                mBalanceReport.put("Experienced", ++count);
+            } else {
+                Integer count = mBalanceReport.get("Inexperienced");
+                mBalanceReport.put("Inexperienced", ++count);
             }
         }
-        return heightReport;
     }
 
     @Override
