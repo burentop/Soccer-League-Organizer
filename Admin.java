@@ -6,8 +6,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.teamtreehouse.model.Player;
 import com.teamtreehouse.model.Players;
@@ -30,6 +34,7 @@ public class Admin {
         mMenu.put("new", "Create a new team");
         mMenu.put("add", "Add player to existing team");
         mMenu.put("remove", "Remove player from existing team");
+        mMenu.put("report", "See team roster by height");
         mMenu.put("quit", "Exit program");
     }
 
@@ -53,19 +58,27 @@ public class Admin {
                 choice = promptInput();
                 switch (choice) {
                     case "new":
-                        createTeam();
+                        // 11 players to a team
+                        if (mTeamList.size() < ((mAvailPlayers.size() + 
+                            mUsedPlayers.size()) / 11)) {
+                            createTeam();
+                        } else {
+                            System.out.println("There are not enough players" +
+                                " to create more teams.");
+                            System.out.println();
+                        }
                         break;
                     case "add":
                         if (mTeamList.size() > 0) {
-                            Team team = chooseTeam(mTeamList);
+                            Team teamToAdd = chooseTeam(mTeamList);
                             Player player = choosePlayer(mAvailPlayers);
-                            team.addPlayer(player);
+                            teamToAdd.addPlayer(player);
                             mUsedPlayers.add(player);
                             mAvailPlayers.remove(player);
                             System.out.printf("%s %s was added to Team %s\n",
                                     player.getFirstName(),
                                     player.getLastName(), 
-                                    team.getTeamName());
+                                    teamToAdd.getTeamName());
                             System.out.println();
                             break;
                         } else {
@@ -73,16 +86,24 @@ public class Admin {
                             break;
                         }
                     case "remove":
-                        Team team = chooseTeam(mTeamList);
+                        Team teamToRemove = chooseTeam(mTeamList);
                         System.out.println("Which player to remove: ");
-                        Player player = choosePlayer(team.getPlayers());
-                        team.removePlayer(player);
+                        List<Player> players = 
+                                    new ArrayList<>(teamToRemove.getPlayers());
+                        Player player = choosePlayer(players);
+                        teamToRemove.removePlayer(player);
                         mUsedPlayers.remove(player);
                         mAvailPlayers.add(player);
                         System.out.printf("%s %s was removed from Team %s\n",
                                     player.getFirstName(),
                                     player.getLastName(),
-                                    team.getTeamName());
+                                    teamToRemove.getTeamName());
+                        break;
+                    case "report":
+                        System.out.println("Which team for report: ");
+                        Team teamForReport = chooseTeam(mTeamList);
+                        printHeightReport(teamForReport.heightReport());
+                        break;
                     case "quit":
                         System.out.println("Goodbye.");
                         break;
@@ -158,6 +179,21 @@ public class Admin {
         String optionAsString = mReader.readLine();
         int choice = Integer.parseInt(optionAsString.trim());
         return choice - 1;
+    }
+
+    private void printHeightReport(Map<String, Set<Player>> report) {
+        Iterator it = report.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            System.out.println();
+            System.out.println(pair.getKey());
+            System.out.println("*********");
+            TreeSet<Player> players = (TreeSet) pair.getValue();
+            for (Player player : players) {
+                System.out.println(player);
+            }
+        }
+        System.out.println();
     }
 
 
