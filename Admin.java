@@ -94,6 +94,12 @@ public class Admin {
                             printBalanceReport(team.getBalanceReport());
                             double exp = team.getExpPlayers();
                             System.out.printf("Experienced Percent: %f\n", exp);
+                            System.out.printf("Height 47-50: %d\n", 
+                                                team.getTall());
+                            System.out.printf("Height 41-46: %d\n",
+                                                team.getMed());
+                            System.out.printf("Height 35-40: %d\n",
+                                                team.getShort());
                             System.out.println();
                         }
                         break;

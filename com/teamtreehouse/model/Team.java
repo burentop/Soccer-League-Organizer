@@ -63,6 +63,21 @@ public class Team implements Comparable<Team> {
         return mBalanceReport;
     }
 
+    public int getTall() {
+        createReports();
+        return mHeightReport.get("47-50").size();
+    }
+
+    public int getMed() {
+        createReports();
+        return mHeightReport.get("41-46").size();
+    }
+
+    public int getShort() {
+        createReports();
+        return mHeightReport.get("35-40").size();
+    }
+
     public void createReports() {
         mHeightReport = new TreeMap<>();
         mBalanceReport = new TreeMap<>();
