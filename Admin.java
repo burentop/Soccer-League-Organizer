@@ -88,9 +88,12 @@ public class Admin {
                             break;
                         }
                     case "balance":
-                        System.out.println("Which team for Balance Report: ");
-                        Team teamForBalance = chooseTeam(mTeamList);
-                        printBalanceReport(teamForBalance.getBalanceReport());
+                        System.out.println("League Balance Report: ");
+                        for (Team team : mTeamList) {
+                            System.out.println(team.getTeamName);
+                            printBalanceReport(team.getBalanceReport());
+                            System.out.println();
+                        }
                         break;
                     case "print":
                         System.out.println("Which team for Balance Report: ");
