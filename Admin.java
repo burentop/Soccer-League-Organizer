@@ -90,8 +90,10 @@ public class Admin {
                     case "balance":
                         System.out.println("League Balance Report: ");
                         for (Team team : mTeamList) {
-                            System.out.println(team.getTeamName);
+                            System.out.println(team.getTeamName());
                             printBalanceReport(team.getBalanceReport());
+                            double exp = team.getExpPlayers();
+                            System.out.printf("Experienced Percent: %f\n", exp);
                             System.out.println();
                         }
                         break;
@@ -215,7 +217,6 @@ public class Admin {
         Iterator it = report.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
-            System.out.println();
             System.out.println(pair.getKey() + ": " + pair.getValue());
         }
     } 

@@ -47,6 +47,12 @@ public class Team implements Comparable<Team> {
         return (Set) mRoster;
     }
 
+    public double getExpPlayers() {
+        double exp = mBalanceReport.get("Experienced");
+        double tot = mRoster.size();
+        return exp / tot;
+    }
+
     public Map<String, Set<Player>> getHeightReport() {
         createReports();
         return mHeightReport;
