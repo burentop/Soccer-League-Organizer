@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -24,15 +26,18 @@ public class Admin {
     private List<Player> mAvailPlayers;
     private List<Player> mUsedPlayers;
     private BufferedReader mReader;
+    private Queue<Player> mWaitList;
 
     public Admin() {
         mAvailPlayers = new ArrayList<>(Arrays.asList(Players.load()));
         mUsedPlayers = new ArrayList<>();
         mTeamList = new ArrayList<>();
         mReader = new BufferedReader(new InputStreamReader (System.in));
+        mWaitList = new ArrayDeque<>();
         mMenu = new HashMap<>();
         mMenu.put("new", "Create a new team");
         mMenu.put("add", "Add player to existing team");
+        mMenu.put("player", "Add player to wait list");
         mMenu.put("balance", "See league balance report");
         mMenu.put("print", "Print team roster");
         mMenu.put("remove", "Remove player from existing team");
@@ -102,6 +107,9 @@ public class Admin {
                                                 team.getShort());
                             System.out.println();
                         }
+                        break;
+                    case "player":
+                        mWaitList.add(addPlayer());
                         break;
                     case "print":
                         System.out.println("Which team for Balance Report: ");
@@ -231,6 +239,28 @@ public class Admin {
             System.out.println(player);
         }
         System.out.println();
+    }
+
+    private Player addPlayer() {
+        String firstName = "";
+        String lastName = "";
+        int height = 0;
+        String experience = "yes";
+        boolean exp = false;
+        try {
+            System.out.print("Enter the first name of the player to add: ");
+            firstName = mReader.readLine();
+            System.out.print("Enter the last name: ");
+            lastName = mReader.readLine();
+            System.out.print("Enter the height in inches: ");
+            height = (int) Integer.parseInt(mReader.readLine());
+            System.out.print("Does the player have experience? (yes/no): ");
+            experience = mReader.readLine();
+            if (experience.equals("yes")) exp = true;
+        } catch (IOException ioe) {
+            System.out.println("Problem reading input.");
+        }
+        return new Player(firstName, lastName, height, exp);
     }
 
 
