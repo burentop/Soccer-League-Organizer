@@ -37,6 +37,7 @@ public class Admin {
         mMenu = new HashMap<>();
         mMenu.put("new", "Create a new team");
         mMenu.put("add", "Add player to existing team");
+        mMenu.put("ban", "Remove player from League");
         mMenu.put("player", "Add player to wait list");
         mMenu.put("balance", "See league balance report");
         mMenu.put("print", "Print team roster");
@@ -107,6 +108,11 @@ public class Admin {
                                                 team.getShort());
                             System.out.println();
                         }
+                        break;
+                    case "ban":
+                        Player playerToRemove = choosePlayer(mAvailPlayers);
+                        mAvailPlayers.remove(playerToRemove);
+                        mAvailPlayers.add(mWaitList.poll());
                         break;
                     case "player":
                         mWaitList.add(addPlayer());
