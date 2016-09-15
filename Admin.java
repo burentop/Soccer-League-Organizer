@@ -160,7 +160,7 @@ public class Admin {
         System.out.println();
     }
 
-    private Team chooseTeam(List list) throws IOException {
+    private Team chooseTeam(List<Team> list) throws IOException {
         System.out.println();
         System.out.println("Available teams: ");
         List<Team> sortedTeam = list;
@@ -177,7 +177,7 @@ public class Admin {
         return (Team) sortedTeam.get(index);
     }
 
-    private Player choosePlayer(List list) throws IOException {
+    private Player choosePlayer(List<Player> list) throws IOException {
         System.out.println();
         System.out.println("Available players: ");
         List<Player> sortedPlayer = list;
@@ -194,7 +194,7 @@ public class Admin {
         return (Player) sortedPlayer.get(index);
     }
 
-    private int promptForIndex(List list) throws IOException {
+    private int promptForIndex(List<?> list) throws IOException {
         for (int i = 0; i < list.size(); i++) {
             System.out.printf("%s. %s\n", i + 1, list.get(i));
         }
@@ -205,13 +205,11 @@ public class Admin {
     }
 
     private void printHeightReport(Map<String, Set<Player>> report) {
-        Iterator it = report.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
+        for (Map.Entry<String, Set<Player>> pair : report.entrySet()) {
             System.out.println();
             System.out.println(pair.getKey());
             System.out.println("*********");
-            TreeSet<Player> players = (TreeSet) pair.getValue();
+            Set<Player> players = pair.getValue();
             for (Player player : players) {
                 System.out.println(player);
             }
@@ -220,9 +218,7 @@ public class Admin {
     }
 
     private void printBalanceReport(Map<String, Integer> report) {
-        Iterator it = report.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
+        for (Map.Entry<String, Integer> pair : report.entrySet()) {
             System.out.println(pair.getKey() + ": " + pair.getValue());
         }
     } 
