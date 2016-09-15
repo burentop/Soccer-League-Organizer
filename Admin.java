@@ -37,6 +37,7 @@ public class Admin {
         mMenu = new HashMap<>();
         mMenu.put("new", "Create a new team");
         mMenu.put("add", "Add player to existing team");
+        mMenu.put("auto", "Build teams automatically");
         mMenu.put("ban", "Remove player from League");
         mMenu.put("player", "Add player to wait list");
         mMenu.put("balance", "See league balance report");
@@ -93,6 +94,9 @@ public class Admin {
                             System.out.println("No teams have been created.");
                             break;
                         }
+                    case "auto":
+                        autoBuild();
+                        break;
                     case "balance":
                         System.out.println("League Balance Report: ");
                         for (Team team : mTeamList) {
@@ -267,6 +271,42 @@ public class Admin {
             System.out.println("Problem reading input.");
         }
         return new Player(firstName, lastName, height, exp);
+    }
+
+    private void autoBuild() {
+        for (int i = 0; i < mAvailPlayers.size() / 11; i++) {
+            createTeam();
+        }
+        while (mAvailPlayers.size() > 0) {
+            for (Team team : mTeamList) {
+                for (Player player : mAvailPlayers) {
+                    if (player.getHeightInInches() < 41 && !player.isPreviousExperience()) {
+                        team.addPlayer(player);
+                        mAvailPlayers.remove(player);
+                        break;
+                    } else if (player.getHeightInInches() < 41) {
+                        team.addPlayer(player);
+                        mAvailPlayers.remove(player);
+                        break;
+                    } else if (player.getHeightInInches() < 47 && !player.isPreviousExperience()) {
+                        team.addPlayer(player);
+                        mAvailPlayers.remove(player);
+                        break;
+                    } else if (player.getHeightInInches() < 47) {
+                        team.addPlayer(player);
+                        mAvailPlayers.remove(player);
+                        break;
+                    } else if (!player.isPreviousExperience()) {
+                        team.addPlayer(player);
+                        mAvailPlayers.remove(player);
+                        break;
+                    } else {
+                        team.addPlayer(player);
+                        mAvailPlayers.remove(player);
+                    }
+                }
+            }
+        }
     }
 
 
